@@ -8,3 +8,8 @@ class ProductModel(BaseModel):
     product_id: int
     image_url: HttpUrl
 
+
+class DiscountCode(BaseModel):
+    """this is the schema for discount code creation API"""
+    code: str
+    discount_percent: int = Field(None, ge=1, le=100)

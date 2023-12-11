@@ -39,3 +39,23 @@ PRODUCT_LIST = [
         "image_url": "",
     },
 ]
+
+DISCOUNT_CODES = [
+    {
+        "code": "FLAT10",
+        "discount_percent": 10
+    }
+]
+
+# Lists count of items purchased, total purchase amount, list of discount codes and total discount amount.
+TOTAL_ORDER_SUMMARY = [
+    {
+        "total_items": 0,
+        "total_amount": 0,
+        "discount_codes": ["FLAT10"],
+        "discount_amount": 0
+    }
+]
+
+
+
