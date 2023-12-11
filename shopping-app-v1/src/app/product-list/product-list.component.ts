@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductsService } from '../services/products.service';
 
 @Component({
   selector: 'app-product-list',
@@ -7,47 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProductListComponent implements OnInit {
   products: any[] = [];
+  responseData: any;
+  constructor(private productsService: ProductsService) {}
   ngOnInit() {
-    this.products = [
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-    ];
-    // this.productService.getProducts().subscribe(
-    //   (data) => {
-    //     this.products = data;
-    //   },
-    //   (error) => {
-    //     console.error('Error fetching products', error);
-    //   }
-    // );
+    console.log('Inside oninit');
+    this.productsService.getData().subscribe((data) => {
+      // Assign the fetched data to the responseData variable
+      this.products = data;
+      // debug logs
+      console.log(this.products);
+    });
   }
 
   addToCart(product: any) {
