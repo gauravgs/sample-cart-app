@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../services/products.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -9,7 +10,10 @@ import { ProductsService } from '../services/products.service';
 export class ProductListComponent implements OnInit {
   products: any[] = [];
   responseData: any;
-  constructor(private productsService: ProductsService) {}
+  constructor(
+    private productsService: ProductsService,
+    private cartService: CartService
+  ) {}
   ngOnInit() {
     console.log('Inside oninit');
     this.productsService.getData().subscribe((data) => {
@@ -21,8 +25,8 @@ export class ProductListComponent implements OnInit {
   }
 
   addToCart(product: any) {
-    // Assuming cartService is another service that handles cart operations
-    // this.cartService.addToCart(product);
+    // cartService is another service that handles cart operations
+    this.cartService.addToCart(product);
     console.log('Added to cart:', product);
   }
 }
