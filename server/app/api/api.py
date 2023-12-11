@@ -1,3 +1,4 @@
+"""API module"""
 import logging
 
 from fastapi_utils.cbv import cbv
@@ -47,9 +48,9 @@ class ShoppingCartServer:
             amount = body.amount - discount_value
             # add as USED codes in order summary
             print(self.db.TOTAL_ORDER_SUMMARY)
-            self.db.TOTAL_ORDER_SUMMARY["discount_codes"] = self.db.TOTAL_ORDER_SUMMARY.get(
-                "discount_codes", []
-            )
+            self.db.TOTAL_ORDER_SUMMARY[
+                "discount_codes"
+            ] = self.db.TOTAL_ORDER_SUMMARY.get("discount_codes", [])
             # using a list, if we need unique codes only, we should use a set and typecast to a list
             self.db.TOTAL_ORDER_SUMMARY["discount_codes"].append(body.discount.code)
             # remove from usable codes
@@ -107,6 +108,7 @@ class ShoppingCartServer:
         return self.db.TOTAL_ORDER_SUMMARY
 
     """Helper Methods"""
+
     def is_discount_valid(self, discount: DiscountCode, order_num: int):
         """
         Discount is Valid only if discount code is known &
