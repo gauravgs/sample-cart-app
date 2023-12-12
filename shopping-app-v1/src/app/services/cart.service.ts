@@ -18,6 +18,31 @@ export class CartService {
     console.warn(this.cart);
   }
 
+  getCart() {
+    let cartItems = Object.entries(this.cart).map(([key, value]) => {
+      return {
+        product_id: key,
+        ...this.cart[key],
+      };
+    });
+    console.log(cartItems);
+    return cartItems;
+  }
+
+  getOrderSummary() {
+    let price = 0;
+    console.log('DATA');
+
+    for (var item in this.cart) {
+      price += this.cart[item]['price'];
+    }
+
+    console.log(price);
+    return {
+      price: price,
+    };
+  }
+
   checkOut() {
     console.log(this.cart);
   }

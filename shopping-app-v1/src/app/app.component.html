@@ -1,15 +1,17 @@
-<nav class="navbar navbar-expand-lg navbar-light">
-  <div class="container d-flex align-items-center">
-    <a class="navbar-brand me-4" href="/home">
-      <img
-        src="assets/logo.png"
-        height="75"
-        alt="ShopEZ"
-        loading="lazy"
-        style="margin-top: -1px"
-      />
-    </a>
-    <a class="nav-link me-auto" href="/cart"> Cart </a>
-  </div>
-</nav>
-<router-outlet></router-outlet>
+<div class="top-nav">
+  <!-- Logo with rendered URL -->
+  <img src="assets/logo.png" alt="Logo" class="logo" />
+
+  <!-- Navigation links -->
+  <nav>
+    <a routerLink="/">Home</a>
+    <a routerLink="/cart">Cart</a>
+    <!-- Add more navigation links as needed -->
+  </nav>
+</div>
+
+<!-- Main content area -->
+<div class="main-content">
+  <!-- Your component content goes here -->
+  <router-outlet></router-outlet>
+</div>

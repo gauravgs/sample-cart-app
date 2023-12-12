@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -8,42 +9,26 @@ import { Component, OnInit } from '@angular/core';
 export class CartComponent implements OnInit {
   totalPrice = 0;
   discount = 0;
-  cartItems: any[] = [];
+  cartItems: any = {};
 
-  removeItem(i: number) {}
+  constructor(private cartService: CartService) {}
 
   ngOnInit() {
-    this.cartItems = [
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-      {
-        name: 'iPhone 15',
-        originalPrice: 600,
-        description: 'This is a new iPhone.',
-      },
-      {
-        name: 'iPhone 14',
-        originalPrice: 500,
-        description: 'This is an old iPhone.',
-      },
-    ];
+    console.log('Getting cart items!');
+    this.refreshOrders();
+    console.log(this.cartItems);
+  }
+
+  removeItem(i: number) {
+    let product = this.cartItems[i];
+    this.cartService.removeFromCart(product);
+    // refresh the cart
+    this.refreshOrders();
+  }
+
+  refreshOrders() {
+    this.cartItems = this.cartService.getCart();
+    let orderSummary = this.cartService.getOrderSummary();
+    this.totalPrice = orderSummary['price'];
   }
 }
