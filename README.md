@@ -35,19 +35,32 @@ ecommerce-store/
 |-- README.md
 ```
 
+
+## Assumptions Made
+
+- Coupons are applicable only for every 3rd order
+- Any coupon can be used only once
+- We can generate new coupon codes via Admin APIs via the swagger UI
+
 ## How to Run
+
+### Git clone this repository 
+
+1. Copy the git link (https)
+2. `git clone https://github.com/gauravgs/sample-cart-app.git`
 
 ### Angular UI Application
 
-1. Navigate to the `ui-application` folder.
+1. Navigate to the `shopping-app-v1` folder.
 2. Install dependencies: `npm install`
 3. Start the application: `ng serve --o`
 
 ### FastAPI Web Server
 
-1. Navigate to the `fastapi-webserver` folder.
+1. Navigate to the `server` folder.
 2. Install dependencies: `pip install -r requirements.txt`
-3. Run the server: `uvicorn main:app --reload`
+3. Navigate to the `/app` dir via `cd app`
+4. Run the server: `uvicorn main:app --reload`
 
 ### Accessing the Application
 
