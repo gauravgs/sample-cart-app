@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../services/cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
@@ -13,8 +14,10 @@ export class CartComponent implements OnInit {
   discountCoupon: string = '';
   order_num = 0;
   applicableCoupons = [];
+  orderSuccessful: boolean = true;
+  orderSummary: any;
 
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit() {
     console.log('Getting cart items!');
@@ -42,15 +45,22 @@ export class CartComponent implements OnInit {
     this.cartService.checkOut(this.discountCoupon).subscribe(
       (response) => {
         console.log('Checkout successful!', response);
-        // Handle successful checkout response
-        alert('Checkout Successul!' + JSON.stringify(response));
-        this.cartService.cleanup();
+        this.orderSuccessful = true;
+        this.orderSummary = response;
       },
       (error) => {
         console.error('Checkout failed:', error);
-        alert('Checkout Unsuccessful! ' + error);
-        this.cartService.cleanup();
+        if ((error['status_code'] = 400)) {
+          this.orderSuccessful = false;
+        }
       }
     );
+  }
+
+  cleanup() {
+    if (this.orderSuccessful) {
+      window.location.reload();
+    }
+    // else, let the user retry without/with a new coupon code
   }
 }

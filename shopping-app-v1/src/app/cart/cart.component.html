@@ -45,12 +45,88 @@
         </ul>
       </div>
 
-      <button class="checkout-button" (click)="checkout()">PLACE ORDER</button>
+      <button
+        (click)="checkout()"
+        type="button"
+        class="btn btn-primary checkout-button"
+        data-toggle="modal"
+        data-target="#myModal"
+      >
+        PLACE ORDER
+      </button>
+
+      <!-- The Modal -->
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Order Summary</h4>
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div *ngIf="orderSuccessful; else orderFailed" class="modal-body">
+              <div style="width: auto" class="cart-summary">
+                <h2>PRICE DETAILS</h2>
+                <div class="summary-item">
+                  <span>Order Number </span
+                  ><span>{{ orderSummary?.order_id || "" }}</span>
+                </div>
+                <div class="summary-item">
+                  <span> Total Price </span
+                  ><span>{{
+                    (orderSummary?.original_amount | currency) || ""
+                  }}</span>
+                </div>
+                <div class="summary-item">
+                  <span>Discount Value</span
+                  ><span>{{
+                    (orderSummary?.discount_value | currency) || (0 | currency)
+                  }}</span>
+                </div>
+                <div class="summary-total">
+                  <span>Payable Amount</span
+                  ><span>{{ (orderSummary?.amount | currency) || "" }}</span>
+                </div>
+              </div>
+            </div>
+            <ng-template #orderFailed>
+              <div class="modal-body">
+                <p>Checkout unsuccessful! Coupon Code is not valid.</p>
+                <strong>
+                  The coupon code is either not registered or is not valid for
+                  you, please retry with the correct code or continue without a
+                  code.</strong
+                >
+              </div>
+            </ng-template>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+              <button
+                type="button"
+                (click)="cleanup()"
+                class="btn btn-danger"
+                data-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Modal End -->
     </div>
   </div>
   <ng-template #emptyCart>
     <div class="empty-cart">
       <p>Your cart is empty.</p>
+      <strong>
+        <a routerLink="/">Click here to add Products</a>
+      </strong>
     </div>
   </ng-template>
 </div>

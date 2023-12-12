@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class CartService {
   cart: any = {};
+  private totalPrice = 0;
 
   // order number endpoint
   private checkoutApiUrl = 'http://127.0.0.1:8000/checkout';
   private getDiscountCodesApiUrl = 'http://127.0.0.1:8000/discount_codes';
-  private totalPrice = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -70,7 +70,5 @@ export class CartService {
     return data;
   }
 
-  cleanup() {
-    window.location.reload();
-  }
+
 }
