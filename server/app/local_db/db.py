@@ -1,3 +1,6 @@
+"""Local DB Module, serves as an in-memory database"""
+
+
 class ProductDB:
     def __init__(self):
         self.CURR_ORDER_COUNTER = 1

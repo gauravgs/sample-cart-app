@@ -42,7 +42,9 @@ class ShoppingCartServer:
         discount_value = 0  # initialize as 0, update if valid
         is_offer_applicable = False
         if body.discount_code:
-            is_offer_applicable, discount_percent = self.is_discount_valid(body.discount_code, order_num)
+            is_offer_applicable, discount_percent = self.is_discount_valid(
+                body.discount_code, order_num
+            )
             print(is_offer_applicable)
             if is_offer_applicable:
                 # update order value (subtracting discount)
@@ -63,7 +65,9 @@ class ShoppingCartServer:
                             self.db.DISCOUNT_CODES = []
                         break
             else:
-                raise HTTPException(status_code=400, detail="Coupon Code is not applicable!")
+                raise HTTPException(
+                    status_code=400, detail="Coupon Code is not applicable!"
+                )
         else:
             print("No discount code supplied")
 
@@ -85,7 +89,7 @@ class ShoppingCartServer:
             "order_id": order_num,
             "offer_applicable": is_offer_applicable,
             "amount": amount,
-            "discount_value": discount_value
+            "discount_value": discount_value,
         }
         print(self.db.TOTAL_ORDER_SUMMARY)
         print("----------------------------------- ")
@@ -130,7 +134,7 @@ class ShoppingCartServer:
         for code in self.db.DISCOUNT_CODES:
             print(f"O# {order_num} && {discount_code} && {code.get('code')}")
             if code.get("code") == discount_code and order_num % 3 == 0:
-                return True, code.get('discount_percent')
+                return True, code.get("discount_percent")
         return False, 0
 
     def get_current_order_number(self):

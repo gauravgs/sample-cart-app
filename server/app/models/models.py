@@ -1,3 +1,6 @@
+"""
+Data Model declarations
+"""
 from typing import List
 
 from pydantic import BaseModel, HttpUrl, Field

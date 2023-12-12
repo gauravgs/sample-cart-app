@@ -1,3 +1,4 @@
+"""Main module which is the app entry point"""
 import logging
 from contextlib import asynccontextmanager
 
