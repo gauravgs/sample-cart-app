@@ -24,7 +24,7 @@ class CartModel(BaseModel):
 
     amount: int
     item_count: int
-    discount: DiscountCode
+    discount_code: str
 
 
 class CheckoutResponse(BaseModel):

@@ -1,6 +1,6 @@
 """API module"""
 import logging
-
+from fastapi import HTTPException
 from fastapi_utils.cbv import cbv
 from fastapi_utils.inferring_router import InferringRouter
 
@@ -37,29 +37,35 @@ class ShoppingCartServer:
         :return:
         """
         order_num = self.get_current_order_number()
-        print(f"{order_num} :: {body.discount}")
-        is_offer_applicable = self.is_discount_valid(body.discount, order_num)
-        print(is_offer_applicable)
+        print(f"{order_num} :: {body.discount_code}")
         amount = body.amount
         discount_value = 0  # initialize as 0, update if valid
-        if is_offer_applicable:
-            # update order value (subtracting discount)
-            discount_value = amount * body.discount.discount_percent / 100
-            amount = body.amount - discount_value
-            # add as USED codes in order summary
-            print(self.db.TOTAL_ORDER_SUMMARY)
-            self.db.TOTAL_ORDER_SUMMARY[
-                "discount_codes"
-            ] = self.db.TOTAL_ORDER_SUMMARY.get("discount_codes", [])
-            # using a list, if we need unique codes only, we should use a set and typecast to a list
-            self.db.TOTAL_ORDER_SUMMARY["discount_codes"].append(body.discount.code)
-            # remove from usable codes
-            for discount in self.db.DISCOUNT_CODES:
-                if discount.get("code") == body.discount.code:
-                    self.db.DISCOUNT_CODES.remove(discount)
-                    if not self.db.DISCOUNT_CODES:
-                        self.db.DISCOUNT_CODES = []
-                    break
+        is_offer_applicable = False
+        if body.discount_code:
+            is_offer_applicable, discount_percent = self.is_discount_valid(body.discount_code, order_num)
+            print(is_offer_applicable)
+            if is_offer_applicable:
+                # update order value (subtracting discount)
+                discount_value = amount * discount_percent / 100
+                amount = body.amount - discount_value
+                # add as USED codes in order summary
+                print(self.db.TOTAL_ORDER_SUMMARY)
+                self.db.TOTAL_ORDER_SUMMARY[
+                    "discount_codes"
+                ] = self.db.TOTAL_ORDER_SUMMARY.get("discount_codes", [])
+                # using a list, if we need unique codes only, we should use a set and typecast to a list
+                self.db.TOTAL_ORDER_SUMMARY["discount_codes"].append(body.discount_code)
+                # remove from usable codes
+                for discount in self.db.DISCOUNT_CODES:
+                    if discount.get("code") == body.discount_code:
+                        self.db.DISCOUNT_CODES.remove(discount)
+                        if not self.db.DISCOUNT_CODES:
+                            self.db.DISCOUNT_CODES = []
+                        break
+            else:
+                raise HTTPException(status_code=400, detail="Coupon Code is not applicable!")
+        else:
+            print("No discount code supplied")
 
         # update order summary with amount, item count and discount value
         self.db.TOTAL_ORDER_SUMMARY["total_items"] = (
@@ -72,10 +78,14 @@ class ShoppingCartServer:
             self.db.TOTAL_ORDER_SUMMARY.get("discount_amount", 0) + discount_value
         )
 
+        self.db.CURR_ORDER_COUNTER = self.db.CURR_ORDER_COUNTER + 1
+
         response = {
+            "original_amount": body.amount,
             "order_id": order_num,
             "offer_applicable": is_offer_applicable,
             "amount": amount,
+            "discount_value": discount_value
         }
         print(self.db.TOTAL_ORDER_SUMMARY)
         print("----------------------------------- ")
@@ -109,24 +119,23 @@ class ShoppingCartServer:
 
     """Helper Methods"""
 
-    def is_discount_valid(self, discount: DiscountCode, order_num: int):
+    def is_discount_valid(self, discount_code: str, order_num: int):
         """
         Discount is Valid only if discount code is known &
         order_num is a multiple of 3 --> ASSUMPTION for nth order clause
-        :param discount:
+        :param discount_code:
         :param order_num:
         :return:
         """
         for code in self.db.DISCOUNT_CODES:
-            print(f"O# {order_num} && {discount.code} && {code.get('code')}")
-            if code.get("code") == discount.code and order_num % 3 == 0:
-                return True
-        return False
+            print(f"O# {order_num} && {discount_code} && {code.get('code')}")
+            if code.get("code") == discount_code and order_num % 3 == 0:
+                return True, code.get('discount_percent')
+        return False, 0
 
     def get_current_order_number(self):
         """
         :return:
         """
         order_number = int(self.db.CURR_ORDER_COUNTER)
-        self.db.CURR_ORDER_COUNTER = self.db.CURR_ORDER_COUNTER + 1
         return order_number
