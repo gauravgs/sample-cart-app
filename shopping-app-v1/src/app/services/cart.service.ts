@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -6,7 +8,12 @@ import { Injectable } from '@angular/core';
 export class CartService {
   cart: any = {};
 
-  constructor() {}
+  // order number endpoint
+  private checkoutApiUrl = 'http://127.0.0.1:8000/checkout';
+  private getDiscountCodesApiUrl = 'http://127.0.0.1:8000/discount_codes';
+  private totalPrice = 0;
+
+  constructor(private http: HttpClient) {}
 
   addToCart(product: any): void {
     this.cart[product['product_id']] = product;
@@ -31,19 +38,39 @@ export class CartService {
 
   getOrderSummary() {
     let price = 0;
-    console.log('DATA');
 
     for (var item in this.cart) {
-      price += this.cart[item]['price'];
+      price += parseInt(this.cart[item]['price']);
     }
 
     console.log(price);
+
+    this.totalPrice = price;
+
     return {
       price: price,
     };
   }
 
-  checkOut() {
-    console.log(this.cart);
+  getDiscountCodes() {
+    const data = this.http.get<any>(this.getDiscountCodesApiUrl);
+    return data;
+  }
+
+  checkOut(discount_code: string): Observable<any> {
+    // constructing the cart data model
+    let payload = {
+      amount: this.totalPrice,
+      item_count: Object.keys(this.cart).length,
+      discount_code: discount_code,
+    };
+
+    const data = this.http.post<any>(this.checkoutApiUrl, payload);
+    console.log(data);
+    return data;
+  }
+
+  cleanup() {
+    window.location.reload();
   }
 }

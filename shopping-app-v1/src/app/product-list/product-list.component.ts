@@ -22,6 +22,7 @@ export class ProductListComponent implements OnInit {
       // debug logs
       console.log(this.products);
     });
+    
   }
 
   addToCart(product: any) {

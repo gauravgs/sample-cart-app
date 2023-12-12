@@ -1,37 +1,56 @@
-  <div class="cart-container">
-    <div *ngIf="cartItems.length > 0; else emptyCart" class="cart-content">
-      <div class="cart-items">
-        <div *ngFor="let item of cartItems; let i = index" class="cart-item">
-          <img [src]="item.image_url" alt="{{ item.name }}" class="item-image" />
-          <div class="item-info">
-            <div class="item-title">{{ item.name }}</div>
-            <div class="item-price">{{ item.price | currency }}</div>
-            <button (click)="removeItem(i)" class="remove-button">Remove</button>
-          </div>
+<div class="cart-container">
+  <div *ngIf="cartItems.length > 0; else emptyCart" class="cart-content">
+    <div class="cart-items">
+      <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+        <img [src]="item.image_url" alt="{{ item.name }}" class="item-image" />
+        <div class="item-info">
+          <div class="item-title">{{ item.name }}</div>
+          <div class="item-price">{{ item.price | currency }}</div>
+          <button (click)="removeItem(i)" class="remove-button">Remove</button>
         </div>
-      </div>
-      <div class="cart-summary">
-        <h2>PRICE DETAILS</h2>
-        <div class="summary-item">
-          <span>Price ({{ cartItems.length }} items)</span
-          ><span>{{ totalPrice | currency }}</span>
-        </div>
-        <div class="summary-item">
-          <span>Discount</span><span>-{{ discount | currency }}</span>
-        </div>
-        <div class="summary-item">
-          <span>Delivery Charges</span><span>FREE</span>
-        </div>
-        <div class="summary-total">
-          <span>Total Amount</span
-          ><span>{{ totalPrice - discount | currency }}</span>
-        </div>
-        <button class="checkout-button">PLACE ORDER</button>
       </div>
     </div>
-    <ng-template #emptyCart>
-      <div class="empty-cart">
-        <p>Your cart is empty.</p>
+    <div class="cart-summary">
+      <h2>PRICE DETAILS</h2>
+      <div class="summary-item">
+        <span>Price ({{ cartItems.length }} items)</span
+        ><span>{{ totalPrice | currency }}</span>
       </div>
-    </ng-template>
+
+      <div class="summary-item">
+        <span>Delivery Charges</span><span>FREE</span>
+      </div>
+      <div class="summary-total">
+        <span>Total Amount</span
+        ><span>{{ totalPrice - discount | currency }}</span>
+      </div>
+
+      <div class="summary-item">
+        <label for="discountCoupon">Discount Coupon</label>
+        <div class="discount-coupon-container">
+          <input
+            type="text"
+            id="discountCoupon"
+            [(ngModel)]="discountCoupon"
+            placeholder="Enter coupon code"
+          />
+        </div>
+      </div>
+
+      <!-- Display applicable coupon codes -->
+      <div class="applicable-coupons" *ngIf="applicableCoupons.length > 0">
+        <p>Applicable Coupon Codes:</p>
+        <ul>
+          <li *ngFor="let coupon of applicableCoupons">{{ coupon }}</li>
+        </ul>
+      </div>
+
+      <button class="checkout-button" (click)="checkout()">PLACE ORDER</button>
+    </div>
   </div>
+  <ng-template #emptyCart>
+    <div class="empty-cart">
+      <p>Your cart is empty.</p>
+    </div>
+  </ng-template>
+</div>
