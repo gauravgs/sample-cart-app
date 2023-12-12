@@ -27,6 +27,14 @@ export class ProductListComponent implements OnInit {
   addToCart(product: any) {
     // cartService is another service that handles cart operations
     this.cartService.addToCart(product);
+    product['is_in_cart'] = true;
     console.log('Added to cart:', product);
+  }
+
+  removeFromCart(product: any) {
+    // cartService is another service that handles cart operations
+    this.cartService.removeFromCart(product);
+    product['is_in_cart'] = false;
+    console.log('Removed from cart:', product);
   }
 }

@@ -15,6 +15,7 @@ export class CartService {
 
   removeFromCart(product: any): void {
     delete this.cart[product['product_id']];
+    console.warn(this.cart);
   }
 
   checkOut() {

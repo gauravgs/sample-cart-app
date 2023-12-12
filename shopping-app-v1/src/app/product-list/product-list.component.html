@@ -12,9 +12,18 @@
         <span class="price-sale">{{ product.price | currency }}</span>
       </p>
       <p class="product-description">{{ product.description }}</p>
-      <button class="btn-add-to-cart" (click)="addToCart(product)">
-        Add to Cart
-      </button>
+      <div>
+        <span *ngIf="product.is_in_cart; else notAdded">
+          <button class="btn-add-to-cart" (click)="removeFromCart(product)">
+            Remove from Cart
+          </button>
+        </span>
+        <ng-template #notAdded>
+          <button class="btn-add-to-cart" (click)="addToCart(product)">
+            <span>Add to Cart</span>
+          </button>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>
